@@ -367,6 +367,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE
 
 ---
 
-## 🏁 Conclusion
+## Conclusion
 
 SIOTDA proves that security can be achieved without requiring high levels of computation. Through the incorporation of HMAC-SHA256 to authenticate data, AES-256-GCM for secure communication, and nonces for replay attacks prevention, this protocol provides a feasible security model applicable in an IoT setting. Interactive simulation tools help in validating the efficiency of the security mechanisms.
