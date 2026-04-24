@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> SIOTDA </title>
+    <link rel="icon" type="image/png" href="iiitdmlogo.png">
+    <link rel="shortcut icon" href="iiitdmlogo.png" type="image/png">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-logo">
+        <a
+          href="index.html"
+          style="
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+          "
+        >
+          <img
+            src="iiitdmlogo.png"
+            alt="IoT Security Logo"
+            width="48"
+            height="48"
+            style="
+              border-radius: 12px;
+              object-fit: contain;
+              image-rendering: high-quality;
+            "
+            referrerpolicy="no-referrer"
+          />
+        </a>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="register.html" class="active">Register</a>
+        <a href="chat.html">Chat</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="attack.html">Attack</a>
+        <a href="flow.html">Flow</a>
+        <a href="encryption.html">Encryption</a>
+        <a href="crypto.html">Crypto</a>
+      </div>
+      <div class="nav-actions" style="display: flex; align-items: center">
+        <button
+          id="darkToggle"
+          style="
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: transform 0.2s;
+          "
+          title="Toggle Dark Mode"
+        >
+          🌙
+        </button>
+        <div class="hamburger" id="hamburger">☰</div>
+      </div>
+    </nav>
+
+    <div id="connectionStatus" class="connection-bar">
+      <span id="statusDot"></span>
+      <span id="statusText">Connecting...</span>
+    </div>
+
+    <main class="container">
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 2rem;
+          max-width: 900px;
+          margin: 2rem auto;
+        "
+      >
+        <div class="card" style="padding: 2.5rem; height: fit-content">
+          <div class="text-center mb-2">
+            <h2 style="font-size: 1.5rem; font-weight: 700">
+              Provision Device
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.875rem">
+              Add a new node to the secure mesh network.
+            </p>
+          </div>
+          <form id="registerForm" class="mt-4">
+            <div class="form-group">
+              <label for="deviceId">Device Identifier</label>
+              <input type="text" id="deviceId" placeholder="e.g. IOT-NODE-01" />
+              <span id="deviceIdError" class="error-message"
+                >Please enter a valid device identifier.</span
+              >
+            </div>
+            <div class="form-group">
+              <label for="secretKey">Pre-Shared Key [PSK]</label>
+              <div class="input-with-toggle">
+                <input
+                  type="password"
+                  id="secretKey"
+                  placeholder="Enter 256-bit key"
+                />
+                <button
+                  type="button"
+                  id="toggleSecretKeyBtn"
+                  class="toggle-key-btn"
+                  title="Toggle Visibility"
+                >
+                  👁️
+                </button>
+              </div>
+              <span id="secretKeyError" class="error-message"
+                >Please enter a valid encryption key.</span
+              >
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary w-full"
+              style="margin-top: 1rem"
+            >
+              Register Device
+            </button>
+          </form>
+
+          <div id="registerSuccess" class="register-success hidden">
+            <div class="success-icon">✔</div>
+            <h3>Device Registered!</h3>
+            <p id="successDeviceText"></p>
+            <button
+              id="registerAnotherBtn"
+              class="btn btn-outline"
+              style="margin-top: 1rem"
+            >
+              Register Another
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="card registered-devices-panel"
+          style="padding: 2.5rem; display: flex; flex-direction: column"
+        >
+          <div
+            class="panel-header"
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 1.5rem;
+            "
+          >
+            <h3 style="font-size: 1.125rem; font-weight: 700">
+              REGISTERED DEVICES
+            </h3>
+            <button
+              id="refreshDevicesBtn"
+              class="btn btn-outline"
+              style="padding: 0.35rem 0.75rem; font-size: 0.75rem"
+            >
+              Refresh
+            </button>
+          </div>
+
+          <div
+            id="deviceListContainer"
+            style="
+              flex: 1;
+              overflow-y: auto;
+              max-height: 300px;
+              padding-right: 0.5rem;
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+            "
+          >
+            <!-- Devices will be dynamically injected -->
+          </div>
+
+          <div
+            class="panel-footer"
+            style="
+              margin-top: 1.5rem;
+              border-top: 1px solid var(--border);
+              padding-top: 1rem;
+            "
+          >
+            <ul
+              style="
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                padding-left: 1rem;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                list-style-type: disc;
+              "
+            >
+              <li>
+                PSK is never stored in plaintext on the server in production
+              </li>
+              <li>Device IDs are unique across the entire fleet</li>
+              <li>Registration is a one-time factory operation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

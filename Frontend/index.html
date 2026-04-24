@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> SIOTDA </title>
+    <link rel="icon" type="image/png" href="iiitdmlogo.png">
+    <link rel="shortcut icon" href="iiitdmlogo.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <nav class="navbar">
+        <div class="nav-logo">
+            <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 1rem;">
+                <img src="iiitdmlogo.png" alt="IoT Security Logo" width = "48" height="48" style="border-radius: 12px; object-fit: contain; image-rendering: high-quality;" referrerPolicy="no-referrer">
+            </a>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html" class="active">Home</a>
+            <a href="register.html">Register</a>
+            <a href="chat.html">Chat</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="attack.html">Attack</a>
+            <a href="flow.html">Flow</a>
+            <a href="encryption.html">Encryption</a>
+            <a href="crypto.html">Crypto</a>
+        </div>
+        <div class="nav-actions" style="display: flex; align-items: center;">
+            <button id="darkToggle" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; padding: 0.25rem; transition: transform 0.2s;" title="Toggle Dark Mode">🌙</button>
+            <div class="hamburger" id="hamburger">☰</div>
+        </div>
+    </nav>
+
+    <div id="connectionStatus" class="connection-bar">
+        <span id="statusDot"></span>
+        <span id="statusText">Connecting...</span>
+    </div>
+
+    <main class="container">
+        <div class="card text-center" style="margin-bottom: 3rem; border: none; background: transparent; box-shadow: none;">
+            <h2 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.05em; margin-bottom: 1rem;">SIOTDA</h2>
+            <p style="color: var(--text-muted); font-size: 1.125rem; max-width: 600px; margin: 0 auto;">Implement secure IoT authentication using HMAC, enable AES-encrypted communication, and monitor system security with real-time attack detection.</p>
+        </div>
+
+        <!-- Authenticate Device Section -->
+        <div class="card" style="max-width: 600px; margin: 0 auto 3rem; padding: 2rem; text-align: center;">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Authenticate Device</h3>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Quickly verify a device's identity before starting communication.</p>
+            <div style="display: flex; gap: 0.75rem; max-width: 400px; margin: 0 auto;">
+                <input type="text" id="quickAuthId" placeholder="Enter Device ID" style="flex: 1;">
+                <button id="quickAuthBtn" class="btn btn-primary">Authenticate</button>
+            </div>
+            <span id="quickAuthError" class="error-message" style="margin-top: 0.5rem;">Please enter a Device ID.</span>
+        </div>
+
+        <div class="grid">
+            <a href="register.html" class="nav-card" data-tooltip="Provision new IoT nodes">
+                <i>🔒</i>
+                <h3>Register Device</h3>
+                <p>Provision new IoT nodes with unique security credentials.</p>
+            </a>
+            <a href="chat.html" class="nav-card" data-tooltip="Secure end-to-end messaging">
+                <i>💬</i>
+                <h3>Secure Messaging</h3>
+                <p>End-to-end encrypted communication channel for your devices.</p>
+            </a>
+            <a href="dashboard.html" class="nav-card" data-tooltip="Monitor system health">
+                <i>📊</i>
+                <h3>System Dashboard</h3>
+                <p>Real-time monitoring and threat detection analytics.</p>
+            </a>
+            <a href="flow.html" class="nav-card" data-tooltip="Visualize auth lifecycle">
+                <i>🔄</i>
+                <h3>Auth Visualizer</h3>
+                <p>Trace the secure handshake and verification lifecycle.</p>
+            </a>
+            <a href="encryption.html" class="nav-card" data-tooltip="Visualize message encryption">
+                <i>🔐</i>
+                <h3>Encryption View</h3>
+                <p>Demonstrate plaintext to AES/Base64 encryption transformation.</p>
+            </a>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

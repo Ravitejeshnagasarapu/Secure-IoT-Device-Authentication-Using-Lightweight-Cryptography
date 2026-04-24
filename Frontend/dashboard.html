@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> SIOTDA </title>
+    <link rel="icon" type="image/png" href="iiitdmlogo.png">
+    <link rel="shortcut icon" href="iiitdmlogo.png" type="image/png">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-logo">
+        <a
+          href="index.html"
+          style="
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+          "
+        >
+          <img
+            src="iiitdmlogo.png"
+            alt="IoT Security Logo"
+            width="48"
+            height="48"
+            style="
+              border-radius: 12px;
+              object-fit: contain;
+              image-rendering: high-quality;
+            "
+            referrerpolicy="no-referrer"
+          />
+        </a>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+        <a href="chat.html">Chat</a>
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="attack.html">Attack</a>
+        <a href="flow.html">Flow</a>
+        <a href="encryption.html">Encryption</a>
+        <a href="crypto.html">Crypto</a>
+      </div>
+      <div class="nav-actions" style="display: flex; align-items: center">
+        <button
+          id="darkToggle"
+          style="
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: transform 0.2s;
+          "
+          title="Toggle Dark Mode"
+        >
+          🌙
+        </button>
+        <div class="hamburger" id="hamburger">☰</div>
+      </div>
+    </nav>
+
+    <div id="connectionStatus" class="connection-bar">
+      <span id="statusDot"></span>
+      <span id="statusText">Connecting...</span>
+    </div>
+
+    <main class="container">
+      <div
+        class="stats-container"
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+          margin-bottom: 2rem;
+        "
+      >
+        <div class="stat-card">
+          <h4>Total Devices</h4>
+          <div id="totalDevices" class="value">0</div>
+        </div>
+        <div class="stat-card success">
+          <h4>Auth Success</h4>
+          <div id="authSuccess" class="value">0</div>
+        </div>
+        <div class="stat-card danger">
+          <h4>Attacks Blocked</h4>
+          <div id="attacksBlocked" class="value">0</div>
+        </div>
+        <div class="stat-card">
+          <h4>Active Sessions</h4>
+          <div id="activeSessions" class="value">0</div>
+        </div>
+        <div class="stat-card danger">
+          <h4>Replay Blocked</h4>
+          <div id="replayBlocked" class="value">0</div>
+        </div>
+        <div class="stat-card danger">
+          <h4>Spoof Blocked</h4>
+          <div id="spoofBlocked" class="value">0</div>
+        </div>
+        <div class="stat-card">
+          <h4>Active Challenges</h4>
+          <div id="activeChallenges" class="value">0</div>
+        </div>
+        <div class="stat-card success">
+          <h4>Security Score</h4>
+          <div id="securityScore" class="value">0</div>
+        </div>
+      </div>
+
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 2rem;
+        "
+      >
+        <div class="card" style="padding: 1.5rem">
+          <h2
+            style="
+              font-size: 1.125rem;
+              font-weight: 700;
+              border-bottom: 1px solid var(--border);
+              padding-bottom: 1rem;
+              margin-bottom: 1rem;
+            "
+          >
+            Device Activity
+          </h2>
+          <div
+            id="deviceActivity"
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 0.75rem;
+              max-height: 250px;
+              overflow-y: auto;
+              padding-right: 0.5rem;
+            "
+          >
+            <!-- Activity injected here -->
+          </div>
+        </div>
+        <div class="card threat-card" style="padding: 1.5rem">
+          <h2
+            style="
+              font-size: 1.125rem;
+              font-weight: 700;
+              border-bottom: 1px solid var(--border);
+              padding-bottom: 1rem;
+              margin-bottom: 1rem;
+            "
+          >
+            Threat Breakdown
+          </h2>
+          <div
+            id="threatBreakdown"
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 1rem;
+              justify-content: center;
+              height: 100%;
+            "
+          >
+            <div class="threat-item">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-bottom: 4px;
+                "
+              >
+                <span
+                  style="
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                    color: var(--text-main);
+                  "
+                  >REPLAY ATTACKS</span
+                >
+              </div>
+              <div class="threat-bar-container">
+                <div
+                  id="replayBar"
+                  class="threat-bar"
+                  style="background: var(--danger)"
+                >
+                  0
+                </div>
+              </div>
+            </div>
+
+            <div class="threat-item">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-bottom: 4px;
+                "
+              >
+                <span
+                  style="
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                    color: var(--text-main);
+                  "
+                  >SPOOFING ATTEMPTS</span
+                >
+              </div>
+              <div class="threat-bar-container">
+                <div
+                  id="spoofBar"
+                  class="threat-bar"
+                  style="background: var(--danger)"
+                >
+                  0
+                </div>
+              </div>
+            </div>
+
+            <div class="threat-item">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-bottom: 4px;
+                "
+              >
+                <span
+                  style="
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                    color: var(--text-main);
+                  "
+                  >MITM INTERCEPTS</span
+                >
+              </div>
+              <div class="threat-bar-container">
+                <div
+                  id="mitmBar"
+                  class="threat-bar"
+                  style="background: var(--danger)"
+                >
+                  0
+                </div>
+              </div>
+            </div>
+
+            <div class="threat-item">
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-bottom: 4px;
+                "
+              >
+                <span
+                  style="
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                    color: var(--text-main);
+                  "
+                  >SUCCESSFUL AUTHS</span
+                >
+              </div>
+              <div class="threat-bar-container">
+                <div
+                  id="authBar"
+                  class="threat-bar"
+                  style="background: var(--success)"
+                >
+                  0
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 0">
+        <div
+          style="
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <h2 style="font-size: 1.125rem; font-weight: 700">
+            Security Event Logs
+          </h2>
+          <div style="display: flex; align-items: center; gap: 1rem">
+            <button id="refreshLogsBtn" class="btn btn-outline btn-small">
+              Refresh
+            </button>
+            <select id="logFilter">
+              <option value="ALL">All Events</option>
+              <option value="Auth OK">Auth OK</option>
+              <option value="Auth Fail">Auth Fail</option>
+              <option value="Replay">Replay</option>
+              <option value="Spoof">Spoof</option>
+              <option value="MITM">MITM</option>
+              <option value="Register">Register</option>
+            </select>
+            <span
+              style="
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                font-weight: 500;
+              "
+              >Auto-refreshing every 2s</span
+            >
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Event</th>
+                <th>Device</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody id="logTableBody">
+              <!-- Logs will be injected here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

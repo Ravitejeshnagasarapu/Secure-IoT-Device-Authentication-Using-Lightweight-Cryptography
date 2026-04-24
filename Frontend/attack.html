@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> SIOTDA </title>
+    <link rel="icon" type="image/png" href="iiitdmlogo.png">
+    <link rel="shortcut icon" href="iiitdmlogo.png" type="image/png">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="dark">
+    <nav class="navbar">
+      <div class="nav-logo">
+        <a
+          href="index.html"
+          style="
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+          "
+        >
+          <img
+            src="iiitdmlogo.png"
+            alt="IoT Security Logo"
+            width="48"
+            height="48"
+            style="
+              border-radius: 12px;
+              object-fit: contain;
+              image-rendering: high-quality;
+            "
+            referrerpolicy="no-referrer"
+          />
+        </a>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+        <a href="chat.html">Chat</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="attack.html" class="active">Attack</a>
+        <a href="flow.html">Flow</a>
+        <a href="encryption.html">Encryption</a>
+        <a href="crypto.html">Crypto</a>
+      </div>
+      <div class="nav-actions" style="display: flex; align-items: center">
+        <button
+          id="darkToggle"
+          style="
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: transform 0.2s;
+          "
+          title="Toggle Dark Mode"
+        >
+          🌙
+        </button>
+        <div class="hamburger" id="hamburger">☰</div>
+      </div>
+    </nav>
+
+    <div id="connectionStatus" class="connection-bar">
+      <span id="statusDot"></span>
+      <span id="statusText">Connecting...</span>
+    </div>
+
+    <main class="container">
+      <div style="margin-bottom: 2rem">
+        <h2
+          style="
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+          "
+        >
+          Attack Simulations
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.875rem">
+          Live demonstrations showing how each attack is detected and blocked by
+          the authentication protocol
+        </p>
+      </div>
+
+      <!-- TARGET DEVICE -->
+      <div
+        class="card"
+        style="
+          margin-bottom: 2rem;
+          display: flex;
+          align-items: flex-end;
+          gap: 1rem;
+          flex-wrap: wrap;
+        "
+      >
+        <div style="flex: 1; min-width: 250px">
+          <label
+            style="
+              display: block;
+              font-size: 0.75rem;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              color: var(--text-muted);
+              margin-bottom: 0.5rem;
+              font-weight: 600;
+            "
+            >Target Device</label
+          >
+          <select id="attackDevice" class="input-field" style="width: 100%">
+            <option>Loading...</option>
+          </select>
+        </div>
+        <button
+          id="runAll"
+          class="btn btn-outline"
+          style="
+            border-color: var(--danger);
+            color: var(--danger);
+            padding: 0.75rem 1.5rem;
+          "
+        >
+          ⚡ Run All Attacks
+        </button>
+        <button
+          id="clearAttack"
+          class="btn btn-outline"
+          style="padding: 0.75rem 1.5rem"
+        >
+          ↺ Clear
+        </button>
+      </div>
+
+      <!-- ATTACK CARDS -->
+      <div class="grid" style="margin-bottom: 2rem">
+        <div
+          class="card"
+          style="display: flex; flex-direction: column; gap: 1rem"
+        >
+          <div style="display: flex; align-items: center; gap: 1rem">
+            <div
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 1px solid var(--danger);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--danger);
+              "
+            >
+              ⟲
+            </div>
+            <div>
+              <h3
+                style="
+                  font-size: 1.125rem;
+                  font-weight: 600;
+                  color: var(--text-main);
+                "
+              >
+                Replay Attack
+              </h3>
+              <p
+                style="
+                  font-size: 0.75rem;
+                  color: var(--danger);
+                  text-transform: uppercase;
+                  letter-spacing: 1px;
+                "
+              >
+                Nonce Reuse
+              </p>
+            </div>
+          </div>
+          <p
+            style="
+              font-size: 0.875rem;
+              color: var(--text-muted);
+              line-height: 1.5;
+              flex: 1;
+            "
+          >
+            Attacker captures a valid authentication response and replays it
+            immediately. The server tracks consumed nonces and instantly detects
+            reuse.
+          </p>
+          <button
+            onclick="runAttack('replay')"
+            class="btn"
+            style="
+              background: rgba(220, 53, 69, 0.1);
+              color: var(--danger);
+              border: 1px solid rgba(220, 53, 69, 0.2);
+              width: 100%;
+            "
+          >
+            ▶ Simulate
+          </button>
+        </div>
+
+        <div
+          class="card"
+          style="display: flex; flex-direction: column; gap: 1rem"
+        >
+          <div style="display: flex; align-items: center; gap: 1rem">
+            <div
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 1px solid var(--accent);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--accent);
+              "
+            >
+              👤
+            </div>
+            <div>
+              <h3
+                style="
+                  font-size: 1.125rem;
+                  font-weight: 600;
+                  color: var(--text-main);
+                "
+              >
+                Device Spoofing
+              </h3>
+              <p
+                style="
+                  font-size: 0.75rem;
+                  color: var(--danger);
+                  text-transform: uppercase;
+                  letter-spacing: 1px;
+                "
+              >
+                Fake Identity
+              </p>
+            </div>
+          </div>
+          <p
+            style="
+              font-size: 0.875rem;
+              color: var(--text-muted);
+              line-height: 1.5;
+              flex: 1;
+            "
+          >
+            Attacker knows the device_id and nonce but NOT the PSK. Attempts
+            authentication with a computed HMAC using a wrong key.
+          </p>
+          <button
+            onclick="runAttack('spoof')"
+            class="btn"
+            style="
+              background: rgba(220, 53, 69, 0.1);
+              color: var(--danger);
+              border: 1px solid rgba(220, 53, 69, 0.2);
+              width: 100%;
+            "
+          >
+            ▶ Simulate
+          </button>
+        </div>
+
+        <div
+          class="card"
+          style="display: flex; flex-direction: column; gap: 1rem"
+        >
+          <div style="display: flex; align-items: center; gap: 1rem">
+            <div
+              style="
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 1px solid var(--warning);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--warning);
+              "
+            >
+              ⚡
+            </div>
+            <div>
+              <h3
+                style="
+                  font-size: 1.125rem;
+                  font-weight: 600;
+                  color: var(--text-main);
+                "
+              >
+                Man-in-the-Middle
+              </h3>
+              <p
+                style="
+                  font-size: 0.75rem;
+                  color: var(--warning);
+                  text-transform: uppercase;
+                  letter-spacing: 1px;
+                "
+              >
+                Nonce Tamper
+              </p>
+            </div>
+          </div>
+          <p
+            style="
+              font-size: 0.875rem;
+              color: var(--text-muted);
+              line-height: 1.5;
+              flex: 1;
+            "
+          >
+            Attacker intercepts the nonce and substitutes their own. Device
+            computes HMAC over real nonce — mismatch detected on tampered nonce.
+          </p>
+          <button
+            onclick="runAttack('mitm')"
+            class="btn"
+            style="
+              background: rgba(220, 53, 69, 0.1);
+              color: var(--danger);
+              border: 1px solid rgba(220, 53, 69, 0.2);
+              width: 100%;
+            "
+          >
+            ▶ Simulate
+          </button>
+        </div>
+      </div>
+
+      <!-- TERMINAL LOG -->
+      <div class="card" style="margin-bottom: 2rem">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+          "
+        >
+          <h3
+            style="
+              font-size: 0.875rem;
+              font-weight: 600;
+              color: var(--accent);
+              letter-spacing: 1px;
+              text-transform: uppercase;
+              border-left: 3px solid var(--accent);
+              padding-left: 0.5rem;
+            "
+          >
+            Attack Terminal Log
+          </h3>
+          <button
+            id="clearAttackLogBtn"
+            class="btn btn-outline btn-small"
+            style="padding: 4px 8px; font-size: 0.75rem"
+          >
+            ✕ Clear
+          </button>
+        </div>
+        <pre
+          id="attackLog"
+          style="
+            background: #000;
+            color: #0f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.875rem;
+            min-height: 80px;
+            overflow-x: auto;
+            margin: 0;
+            white-space: pre-wrap;
+          "
+        >
+root@iot-auth-lab:~$ Ready. Select a device and run an attack simulation.</pre
+        >
+      </div>
+
+      <!-- EXPLANATION SECTION -->
+      <h3
+        style="
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: var(--accent);
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          border-left: 3px solid var(--accent);
+          margin-top: 3rem;
+          margin-bottom: 1.5rem;
+          padding-left: 0.5rem;
+        "
+      >
+        Why Each Attack Fails
+      </h3>
+      <div class="grid">
+        <div class="card">
+          <h4
+            style="
+              font-size: 1rem;
+              font-weight: 600;
+              color: var(--warning);
+              margin-bottom: 0.75rem;
+            "
+          >
+            ⟲ Replay Attack Prevention
+          </h4>
+          <p
+            style="
+              font-size: 0.875rem;
+              color: var(--text-muted);
+              line-height: 1.6;
+            "
+          >
+            Every nonce is stored with a
+            <code
+              style="
+                color: var(--accent);
+                background: rgba(0, 212, 255, 0.1);
+                padding: 2px 4px;
+                border-radius: 4px;
+              "
+              >used: bool</code
+            >
+            flag. When first consumed, flag →
+            <code
+              style="
+                color: var(--accent);
+                background: rgba(0, 212, 255, 0.1);
+                padding: 2px 4px;
+                border-radius: 4px;
+              "
+              >True</code
+            >. Any subsequent attempt returns
+            <code
+              style="
+                color: var(--accent);
+                background: rgba(0, 212, 255, 0.1);
+                padding: 2px 4px;
+                border-radius: 4px;
+              "
+              >used=True</code
+            >
+            immediately. The nonce store is scoped server-side — no device can
+            bypass it. Even with a valid MAC, replay is rejected.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4
+            style="
+              font-size: 1rem;
+              font-weight: 600;
+              color: var(--warning);
+              margin-bottom: 0.75rem;
+            "
+          >
+            👤 Spoofing Prevention
+          </h4>
+          <p
+            style="
+              font-size: 0.875rem;
+              color: var(--text-muted);
+              line-height: 1.6;
+            "
+          >
+            The PSK is never transmitted. Without it, an attacker cannot compute
+            <code
+              style="
+                color: var(--accent);
+                background: rgba(0, 212, 255, 0.1);
+                padding: 2px 4px;
+                border-radius: 4px;
+              "
+              >HMAC(PSK, nonce||id||ts)</code
+            >. Even if attacker knows
+            <code
+              style="
+                color: var(--accent);
+                background: rgba(0, 212, 255, 0.1);
+                padding: 2px 4px;
+                border-radius: 4px;
+              "
+              >device_id</code
+            >
+            and intercepts the nonce, without PSK the HMAC will differ. Server
+            uses
+            <code
+              style="
+                color: var(--accent);
+                background: rgba(0, 212, 255, 0.1);
+                padding: 2px 4px;
+                border-radius: 4px;
+              "
+              >hmac.compare_digest()</code
+            >
+            — constant-time, no timing leak.
+          </p>
+        </div>
+
+        <div class="card">
+          <h4
+            style="
+              font-size: 1rem;
+              font-weight: 600;
+              color: var(--warning);
+              margin-bottom: 0.75rem;
+            "
+          >
+            ⚡ MITM Prevention
+          </h4>
+          <p
+            style="
+              font-size: 0.875rem;
+              color: var(--text-muted);
+              line-height: 1.6;
+            "
+          >
+            Nonce is included inside the HMAC message. If attacker modifies the
+            nonce in transit: the device computes HMAC over the
+            <i>original</i> nonce, but the server checks against the
+            <i>tampered</i> nonce → HMAC mismatch. Any bit-flip in the nonce is
+            detected.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

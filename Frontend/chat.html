@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> SIOTDA </title>
+    <link rel="icon" type="image/png" href="iiitdmlogo.png">
+    <link rel="shortcut icon" href="iiitdmlogo.png" type="image/png">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+      <!-- Logo section with link to home page -->
+      <div class="nav-logo">
+        <a
+          href="index.html"
+          style="
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+          "
+        >
+          <!-- Logo image -->
+          <img
+            src="iiitdmlogo.png"
+            alt="IoT Security Logo"
+            width="48"
+            height="48"
+            style="
+              border-radius: 12px;
+              object-fit: contain;
+              image-rendering: high-quality;
+            "
+            referrerpolicy="no-referrer"
+          />
+        </a>
+      </div>
+
+      <!-- Navigation links -->
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+        <a href="chat.html" class="active">Chat</a>
+        <!-- Active page -->
+        <a href="dashboard.html">Dashboard</a>
+        <a href="attack.html">Attack</a>
+        <a href="flow.html">Flow</a>
+        <a href="encryption.html">Encryption</a>
+        <a href="crypto.html">Crypto</a>
+      </div>
+
+      <!-- Right-side actions (theme toggle + hamburger menu) -->
+      <div class="nav-actions" style="display: flex; align-items: center">
+        <!-- Dark mode toggle button -->
+        <button
+          id="darkToggle"
+          style="
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: transform 0.2s;
+          "
+          title="Toggle Dark Mode"
+        >
+          🌙
+        </button>
+
+        <!-- Hamburger menu for mobile navigation -->
+        <div class="hamburger" id="hamburger">☰</div>
+      </div>
+    </nav>
+
+    <!-- Connection status indicator -->
+    <div id="connectionStatus" class="connection-bar">
+      <span id="statusDot"></span>
+      <!-- Visual indicator -->
+      <span id="statusText">Connecting...</span>
+      <!-- Status text -->
+    </div>
+
+    <!-- Main content container -->
+    <main class="container">
+      <div class="chat-window">
+        <!-- Sidebar for device/contact list -->
+        <div class="chat-sidebar">
+          <div class="sidebar-header">
+            <h3>Secure Devices</h3>
+
+            <!-- Search input for filtering devices -->
+            <div class="search-box">
+              <input
+                type="text"
+                id="contactSearch"
+                placeholder="Search devices..."
+              />
+            </div>
+          </div>
+
+          <!-- Device list container (populated dynamically) -->
+          <div id="contactList" class="contact-list"></div>
+        </div>
+
+        <!-- Main chat section -->
+        <div class="chat-main">
+          <!-- Chat header showing selected contact -->
+          <div class="chat-header">
+            <div
+              id="activeContactInfo"
+              style="display: flex; align-items: center; gap: 0.75rem"
+            >
+              <!-- Active contact details inserted dynamically -->
+            </div>
+
+            <!-- Toggle to show/hide encrypted content -->
+            <button id="toggleEncryption" class="btn btn-outline">
+              Hide Encryption
+            </button>
+          </div>
+
+          <!-- Chat messages container -->
+          <div id="chatMessages" class="chat-messages"></div>
+
+          <!-- Message input form -->
+          <form id="chatForm" class="chat-footer">
+            <!-- MITM attack simulation toggle -->
+            <div
+              class="switch-container"
+              style="padding-right: 1rem; border-right: 1px solid var(--border)"
+            >
+              <input type="checkbox" id="mitmAttack" style="display: none" />
+              <label for="mitmAttack" class="switch"></label>
+              <label
+                for="mitmAttack"
+                style="
+                  margin: 0;
+                  font-size: 0.75rem;
+                  color: var(--danger);
+                  font-weight: 700;
+                  cursor: pointer;
+                  letter-spacing: 0.05em;
+                "
+                >MITM</label
+              >
+            </div>
+
+            <!-- Message input field -->
+            <input
+              type="text"
+              id="messageInput"
+              placeholder="Type a secure message..."
+              autocomplete="off"
+              disabled
+            />
+
+            <!-- Send button -->
+            <button type="submit" class="btn btn-primary" disabled>Send</button>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- Main frontend script -->
+    <script src="script.js"></script>
+
+    <!-- Socket.IO library for real-time communication -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  </body>
+</html>

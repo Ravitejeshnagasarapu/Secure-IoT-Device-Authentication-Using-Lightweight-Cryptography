@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Character encoding -->
+    <meta charset="UTF-8" />
+
+    <!-- Responsive layout settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Page title -->
+    <title> SIOTDA </title>
+    <link rel="icon" type="image/png" href="iiitdmlogo.png">
+    <link rel="shortcut icon" href="iiitdmlogo.png" type="image/png">
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+      <!-- Logo linking to home page -->
+      <div class="nav-logo">
+        <a
+          href="index.html"
+          style="
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+          "
+        >
+          <img
+            src="iiitdmlogo.png"
+            alt="IoT Security Logo"
+            width="48"
+            height="48"
+            style="
+              border-radius: 12px;
+              object-fit: contain;
+              image-rendering: high-quality;
+            "
+            referrerpolicy="no-referrer"
+          />
+        </a>
+      </div>
+
+      <!-- Navigation links -->
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+        <a href="chat.html">Chat</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="attack.html">Attack</a>
+        <a href="flow.html" class="active">Flow</a>
+        <!-- Active page -->
+        <a href="encryption.html">Encryption</a>
+        <a href="crypto.html">Crypto</a>
+      </div>
+
+      <!-- UI actions -->
+      <div class="nav-actions" style="display: flex; align-items: center">
+        <!-- Dark mode toggle -->
+        <button
+          id="darkToggle"
+          style="
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: transform 0.2s;
+          "
+          title="Toggle Dark Mode"
+        >
+          🌙
+        </button>
+
+        <!-- Mobile menu toggle -->
+        <div class="hamburger" id="hamburger">☰</div>
+      </div>
+    </nav>
+
+    <!-- Backend connection status -->
+    <div id="connectionStatus" class="connection-bar">
+      <span id="statusDot"></span>
+      <span id="statusText">Connecting...</span>
+    </div>
+
+    <!-- Main container -->
+    <main class="container">
+      <!-- Device selection and controls -->
+      <div
+        class="card text-center"
+        style="max-width: 600px; margin: 0 auto 2rem"
+      >
+        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem">
+          Authenticate Device
+        </h2>
+
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem">
+          Select a registered device to start authentication flow
+        </p>
+
+        <!-- Device selector and control buttons -->
+        <div
+          style="
+            display: flex;
+            gap: 0.75rem;
+            max-width: 600px;
+            margin: 0 auto;
+            margin-bottom: 1rem;
+          "
+        >
+          <!-- Device dropdown -->
+          <select id="flowDevice" class="input-field" style="flex: 1">
+            <option value="">Select device</option>
+          </select>
+
+          <!-- Action buttons -->
+          <div style="display: flex; gap: 0.5rem">
+            <button
+              id="runFlowBtn"
+              class="btn btn-primary"
+              style="display: flex; align-items: center; gap: 0.5rem"
+            >
+              <span style="font-size: 0.8rem">▶</span> Run Flow
+            </button>
+
+            <button
+              id="resetFlowBtn"
+              class="btn btn-outline"
+              style="display: flex; align-items: center; gap: 0.5rem"
+            >
+              <span style="font-size: 0.8rem">↺</span> Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Mode selection (normal / attack scenarios) -->
+        <div
+          id="flowModeSelectors"
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+          "
+        >
+          <button
+            data-mode="normal"
+            class="btn btn-outline btn-small active"
+            style="
+              padding: 4px 10px;
+              font-size: 0.75rem;
+              border-color: var(--success);
+              color: var(--success);
+            "
+          >
+            Normal Auth
+          </button>
+
+          <button
+            data-mode="wrong_psk"
+            class="btn btn-outline btn-small"
+            style="
+              padding: 4px 10px;
+              font-size: 0.75rem;
+              border-color: var(--danger);
+              color: var(--danger);
+            "
+          >
+            Wrong PSK
+          </button>
+
+          <button
+            data-mode="replay"
+            class="btn btn-outline btn-small"
+            style="
+              padding: 4px 10px;
+              font-size: 0.75rem;
+              border-color: var(--danger);
+              color: var(--danger);
+            "
+          >
+            Replay Attack
+          </button>
+        </div>
+
+        <!-- Error message for invalid selection -->
+        <span
+          id="authError"
+          class="error-message"
+          style="margin-top: 0.5rem; display: none"
+        >
+          Please select a Device ID.
+        </span>
+      </div>
+
+      <!-- Main flow visualization and analysis -->
+      <div
+        id="flowContainer"
+        style="
+          display: grid;
+          grid-template-columns: 1.5fr 1fr;
+          gap: 1.5rem;
+          animation: fadeIn 0.4s ease-out;
+        "
+      >
+        <!-- Left: Flow visualization -->
+        <div class="card" style="padding: 1.5rem">
+          <h2
+            style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem"
+          >
+            Secure Handshake Lifecycle
+          </h2>
+
+          <!-- Step-by-step authentication flow -->
+          <div class="flow-visualizer">
+            <!-- Step 1: Device initiates authentication -->
+            <div class="step" id="step1">
+              <div class="step-header">Device sends device_id to server</div>
+              <div class="step-detail">
+                Initial request to start authentication
+              </div>
+              <div class="code-box">
+                POST /api/challenge<br />
+                { "device_id": "<span id="v-deviceId"></span>" }
+              </div>
+            </div>
+
+            <!-- Step 2: Server generates nonce -->
+            <div class="step" id="step2">
+              <div class="step-header">Server issues nonce challenge</div>
+              <div class="step-detail">Generates unique random challenge</div>
+              <div class="code-box">
+                nonce: <span id="v-nonce" class="hex-val"></span><br />
+                ts: <span id="v-ts"></span>
+              </div>
+            </div>
+
+            <!-- Step 3: Device computes HMAC -->
+            <div class="step" id="step3">
+              <div class="step-header">Device computes HMAC</div>
+              <div class="step-detail">Uses shared secret to generate MAC</div>
+              <div class="code-box">
+                msg: <span id="v-msg" class="hex-val"></span><br />
+                mac: <span id="v-mac" class="hex-val"></span>
+              </div>
+            </div>
+
+            <!-- Step 4: Server verifies response -->
+            <div class="step" id="step4">
+              <div class="step-header">Server verifies response</div>
+              <div class="step-detail">Compares expected vs received MAC</div>
+              <div class="code-box">
+                expected: <span id="v-expected" class="hex-val"></span><br />
+                received: <span id="v-received" class="hex-val"></span><br />
+                match: <span id="v-match"></span>
+              </div>
+            </div>
+
+            <!-- Step 5: Token issuance -->
+            <div class="step" id="step5">
+              <div class="step-header">Session token issued</div>
+              <div class="step-detail">Authentication success response</div>
+              <div class="code-box">
+                token: <span id="v-token" class="hex-val"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Result display -->
+          <div id="flowResult"></div>
+        </div>
+
+        <!-- Right: Sequence + analysis -->
+        <div
+          class="card"
+          style="padding: 1.5rem; display: flex; flex-direction: column"
+        >
+          <!-- Sequence diagram -->
+          <h2
+            style="
+              font-size: 1.125rem;
+              font-weight: 700;
+              margin-bottom: 1rem;
+              color: var(--accent);
+              border-left: 3px solid var(--accent);
+              padding-left: 0.75rem;
+            "
+          >
+            Sequence Diagram
+          </h2>
+
+          <div
+            id="sequenceDiagram"
+            class="side-panel"
+            style="
+              flex: 1;
+              padding: 1.5rem;
+              font-family: var(--font-mono);
+              font-size: 0.75rem;
+              position: relative;
+              min-height: 200px;
+              overflow-y: auto;
+            "
+          >
+            <!-- Participants -->
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 2px solid var(--border);
+                padding-bottom: 0.75rem;
+                margin-bottom: 1.25rem;
+              "
+            >
+              <div>Device</div>
+              <div>Server</div>
+            </div>
+
+            <!-- Dynamic sequence messages -->
+            <div
+              id="seqMessages"
+              style="display: flex; flex-direction: column; gap: 1rem"
+            ></div>
+          </div>
+
+          <!-- Timing analysis -->
+          <div style="margin-top: 1.5rem">
+            <h2
+              style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem"
+            >
+              Timing Analysis
+            </h2>
+
+            <div id="timingBox" class="side-panel" style="padding: 1rem">
+              <div>Device → Server</div>
+              <div>Server processing</div>
+              <div>Response latency</div>
+              <div>Total: <span id="v-totalTime">---</span></div>
+            </div>
+          </div>
+
+          <!-- Security properties -->
+          <div
+            style="
+              margin-top: 1.5rem;
+              padding: 1rem;
+              border: 1px solid var(--border);
+              border-radius: 8px;
+            "
+          >
+            <h2
+              style="font-size: 1.125rem; font-weight: 700; margin-bottom: 1rem"
+            >
+              Security Properties
+            </h2>
+
+            <ul id="securityPropsList">
+              <li>Nonce prevents replay</li>
+              <li>Device identity bound to request</li>
+              <li>Timestamp limits reuse</li>
+              <li>Secret key never transmitted</li>
+              <li>Secure comparison used</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Log output -->
+      <div class="card" style="margin-top: 2rem">
+        <h3 style="font-size: 0.875rem; font-weight: 600">Flow Protocol Log</h3>
+
+        <!-- Terminal-style log display -->
+        <pre
+          id="attackLog"
+          style="
+            background: #000;
+            color: #0f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            min-height: 80px;
+            overflow-x: auto;
+            margin: 0;
+            white-space: pre-wrap;
+          "
+        >
+[SYSTEM] Protocol analyzer ready. Waiting for auth session...
+            </pre
+        >
+      </div>
+    </main>
+
+    <!-- Main script -->
+    <script src="script.js"></script>
+
+    <!-- Inline script placeholder -->
+    <script>
+      // Reserved for page-specific scripting if required
+    </script>
+  </body>
+</html>

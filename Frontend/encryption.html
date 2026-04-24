@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> SIOTDA </title>
+    <link rel="icon" type="image/png" href="iiitdmlogo.png">
+    <link rel="shortcut icon" href="iiitdmlogo.png" type="image/png">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-logo">
+        <a
+          href="index.html"
+          style="
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+          "
+        >
+          <img
+            src="iiitdmlogo.png"
+            alt="IoT Security Logo"
+            width="48"
+            height="48"
+            style="
+              border-radius: 12px;
+              object-fit: contain;
+              image-rendering: high-quality;
+            "
+            referrerpolicy="no-referrer"
+          />
+        </a>
+      </div>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+        <a href="chat.html">Chat</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="attack.html">Attack</a>
+        <a href="flow.html">Flow</a>
+        <a href="encryption.html" class="active">Encryption</a>
+        <a href="crypto.html">Crypto</a>
+      </div>
+      <div class="nav-actions" style="display: flex; align-items: center">
+        <button
+          id="darkToggle"
+          style="
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: transform 0.2s;
+          "
+          title="Toggle Dark Mode"
+        >
+          🌙
+        </button>
+        <div class="hamburger" id="hamburger">☰</div>
+      </div>
+    </nav>
+
+    <div id="connectionStatus" class="connection-bar">
+      <span id="statusDot"></span>
+      <span id="statusText">Connecting...</span>
+    </div>
+
+    <main class="container">
+      <div
+        class="card encryption-card"
+        style="max-width: 600px; margin: 0 auto 2rem"
+      >
+        <div class="text-center" style="margin-bottom: 2rem">
+          <h2
+            style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem"
+          >
+            Message Encryption
+          </h2>
+          <p style="color: var(--text-muted)">
+            Secure IoT communication using authenticated AES-256-GCM.
+          </p>
+        </div>
+
+        <!-- Device Select -->
+        <div class="field-group">
+          <label>IoT Device ID</label>
+          <select id="encryptionDeviceId">
+            <option value="">Loading devices...</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label>Plaintext Message</label>
+          <textarea
+            id="encryptionInput"
+            placeholder="Enter message to encrypt..."
+          ></textarea>
+        </div>
+
+        <div class="field-group">
+          <label>Secret Key (SHA-256 derived)</label>
+          <div class="input-with-btn">
+            <input
+              type="password"
+              id="encryptionKey"
+              placeholder="Enter secret key or generate one"
+            />
+            <button
+              id="toggleKeyVisibility"
+              class="btn btn-outline"
+              title="Toggle Visibility"
+              style="width: 42px"
+            >
+              👁️
+            </button>
+            <button
+              id="genEncKeyBtn"
+              class="btn btn-outline"
+              title="Generate Random Key"
+              style="width: 42px"
+            >
+              🎲
+            </button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Initialization Vector (Optional 12-byte Hex)</label>
+          <input
+            type="text"
+            id="encryptionIv"
+            placeholder="Auto-generated if left blank"
+          />
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+          "
+        >
+          <button id="encryptBtn" class="btn btn-primary primary-btn">
+            Encrypt Message
+          </button>
+          <button
+            id="simulateAttackBtn"
+            class="btn btn-outline"
+            style="border-color: var(--danger); color: var(--danger)"
+          >
+            Simulate Tamper Attack
+          </button>
+        </div>
+        <button
+          id="testEncAvalancheBtn"
+          class="btn btn-outline"
+          style="width: 100%; border-style: dashed"
+        >
+          Test Avalanche Effect (1-bit change)
+        </button>
+      </div>
+
+      <!-- Raw Message Debug -->
+      <div
+        id="rawMessageDebug"
+        class="card"
+        style="
+          max-width: 600px;
+          margin: 0 auto 2rem;
+          display: none;
+          background: rgba(0, 0, 0, 0.02);
+          border-left: 4px solid var(--accent);
+        "
+      >
+        <h4
+          style="
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+          "
+        >
+          IoT Structured Message (Before Encryption)
+        </h4>
+        <div
+          id="rawMessageOutput"
+          style="
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-break: break-all;
+          "
+        ></div>
+      </div>
+
+      <div
+        id="encryptionResult"
+        class="card"
+        style="
+          max-width: 600px;
+          margin: 0 auto 2rem;
+          display: none;
+          animation: fadeIn 0.4s ease-out;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+          "
+        >
+          <h4
+            style="
+              font-size: 0.75rem;
+              text-transform: uppercase;
+              color: var(--text-muted);
+            "
+          >
+            Plaintext (User Input)
+          </h4>
+          <div class="format-toggle" style="display: flex; gap: 0.5rem">
+            <button
+              id="toggleHexB64"
+              class="btn btn-outline btn-small"
+              style="font-size: 0.65rem"
+            >
+              HEX / B64
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="plainTextOutput"
+          style="
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+          "
+        ></div>
+
+        <div style="margin-bottom: 1.5rem">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 0.5rem;
+            "
+          >
+            <h4
+              style="
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                color: var(--text-muted);
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+              "
+            >
+              <span style="font-size: 0.9rem">🔒</span> AES-GCM Ciphertext
+            </h4>
+            <div class="switch-container" style="margin: 0; user-select: none">
+              <input
+                type="checkbox"
+                id="showEncryptedToggle"
+                class="success-switch"
+                style="display: none"
+              />
+              <label for="showEncryptedToggle" class="switch"></label>
+              <label
+                for="showEncryptedToggle"
+                style="
+                  margin: 0;
+                  font-size: 0.75rem;
+                  color: var(--text-main);
+                  font-weight: 700;
+                  cursor: pointer;
+                  letter-spacing: 0.05em;
+                "
+                >SHOW DATA</label
+              >
+            </div>
+          </div>
+
+          <div
+            id="encryptedTextWrapper"
+            style="
+              display: none;
+              background: var(--tech-panel);
+              border-radius: 12px;
+              border: 1px solid var(--border);
+              box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+              overflow: hidden;
+            "
+          >
+            <!-- Ciphertext -->
+            <div
+              style="
+                padding: 1.25rem;
+                border-bottom: 1px solid var(--border);
+                position: relative;
+              "
+            >
+              <h5
+                style="
+                  font-size: 0.65rem;
+                  text-transform: uppercase;
+                  color: var(--text-muted);
+                  margin-bottom: 0.5rem;
+                "
+              >
+                Ciphertext <span class="format-label">(Hex)</span>
+              </h5>
+              <div
+                id="encryptedTextOutput"
+                style="
+                  font-family: var(--font-mono);
+                  color: var(--accent);
+                  word-break: break-all;
+                  font-size: 0.875rem;
+                  padding-right: 4rem;
+                  line-height: 1.6;
+                  min-height: 1.25rem;
+                "
+              >
+                <span></span>
+              </div>
+              <button
+                id="copyEncryptedBtn"
+                class="btn btn-outline"
+                style="
+                  position: absolute;
+                  top: 1.25rem;
+                  right: 1rem;
+                  padding: 0.3rem 0.6rem;
+                  font-size: 0.65rem;
+                  background: var(--card-bg);
+                "
+              >
+                Copy
+              </button>
+            </div>
+
+            <!-- Auth Tag -->
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                background: rgba(255, 255, 255, 0.01);
+              "
+            >
+              <div style="padding: 1rem; border-right: 1px solid var(--border)">
+                <h5
+                  style="
+                    font-size: 0.65rem;
+                    text-transform: uppercase;
+                    color: var(--text-muted);
+                    margin-bottom: 0.4rem;
+                  "
+                >
+                  Authentication Tag
+                </h5>
+                <div
+                  id="authTagOutput"
+                  style="
+                    font-family: var(--font-mono);
+                    color: var(--success);
+                    font-size: 0.8125rem;
+                    word-break: break-all;
+                  "
+                ></div>
+              </div>
+              <div style="padding: 1rem">
+                <h5
+                  style="
+                    font-size: 0.65rem;
+                    text-transform: uppercase;
+                    color: var(--text-muted);
+                    margin-bottom: 0.4rem;
+                  "
+                >
+                  IV / Nonce
+                </h5>
+                <div
+                  id="ivOutput"
+                  style="
+                    font-family: var(--font-mono);
+                    color: var(--warning);
+                    font-size: 0.8125rem;
+                    word-break: break-all;
+                  "
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="hiddenPlaceholder"
+            style="
+              background: var(--tech-panel);
+              padding: 1.5rem;
+              border-radius: 12px;
+              border: 1px dashed var(--border);
+              text-align: center;
+              color: var(--text-muted);
+              font-size: 0.875rem;
+              font-style: italic;
+            "
+          >
+            Encrypted payload hidden. Toggle to view results.
+          </div>
+        </div>
+
+        <div
+          id="avalanche-container"
+          style="
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            display: none;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 0.5rem;
+            "
+          >
+            <h5
+              style="
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                color: var(--text-muted);
+              "
+            >
+              Diffusion Metric
+            </h5>
+            <span
+              id="encryptionAvalancheStat"
+              style="font-size: 0.75rem; color: var(--danger); font-weight: 700"
+            ></span>
+          </div>
+          <div
+            style="
+              font-size: 0.7rem;
+              color: var(--text-muted);
+              line-height: 1.4;
+            "
+          >
+            Demonstrating the diffusion property: a 1-character change in input
+            results in a complete overhaul of the ciphertext.
+          </div>
+        </div>
+      </div>
+
+      <!-- Decryption Card -->
+      <div
+        id="decryptionSection"
+        class="card encryption-card"
+        style="max-width: 600px; margin: 0 auto 4rem"
+      >
+        <div class="text-center" style="margin-bottom: 2rem">
+          <h4
+            style="
+              font-size: 0.75rem;
+              text-transform: uppercase;
+              color: var(--accent);
+              font-weight: 700;
+              letter-spacing: 0.1em;
+              margin-bottom: 0.5rem;
+            "
+          >
+            Decryption Oracle
+          </h4>
+          <p style="color: var(--text-muted); font-size: 0.875rem">
+            Verify integrity and recover plaintext from secure packets.
+          </p>
+        </div>
+
+        <div class="field-group">
+          <label>Ciphertext (Hex)</label>
+          <textarea
+            id="decryptCipherInput"
+            placeholder="Paste ciphertext here..."
+          ></textarea>
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+          "
+        >
+          <div class="field-group" style="margin-bottom: 0">
+            <label>Auth Tag</label>
+            <input type="text" id="decryptTagInput" placeholder="Hex tag" />
+          </div>
+          <div class="field-group" style="margin-bottom: 0">
+            <label>IV / Nonce</label>
+            <input type="text" id="decryptIvInput" placeholder="Hex IV" />
+          </div>
+        </div>
+
+        <button
+          id="decryptBtn"
+          class="btn btn-outline"
+          style="
+            width: 100%;
+            height: 50px;
+            font-weight: 700;
+            background: rgba(0, 212, 255, 0.05);
+            color: var(--accent);
+            border-color: var(--accent);
+          "
+        >
+          Decrypt & Verify Integrity
+        </button>
+
+        <div
+          id="decryptionResult"
+          style="
+            margin-top: 1.5rem;
+            display: none;
+            padding: 1.25rem;
+            background: var(--tech-panel);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            animation: fadeIn 0.3s ease;
+          "
+        >
+          <h5
+            style="
+              font-size: 0.65rem;
+              text-transform: uppercase;
+              color: var(--text-muted);
+              margin-bottom: 0.5rem;
+            "
+          >
+            Recovered Data
+          </h5>
+          <div
+            id="decryptedOutput"
+            style="
+              font-size: 1rem;
+              font-weight: 500;
+              color: var(--success);
+              overflow-wrap: break-word;
+            "
+          ></div>
+        </div>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

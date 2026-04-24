@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Character encoding -->
+    <meta charset="UTF-8" />
+
+    <!-- Responsive layout configuration -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Page title -->
+    <title> SIOTDA </title>
+    <link rel="icon" type="image/png" href="iiitdmlogo.png">
+    <link rel="shortcut icon" href="iiitdmlogo.png" type="image/png">
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+      <!-- Logo section linking to home -->
+      <div class="nav-logo">
+        <a
+          href="index.html"
+          style="
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+          "
+        >
+          <img
+            src="iiitdmlogo.png"
+            alt="IoT Security Logo"
+            width="48"
+            height="48"
+            style="
+              border-radius: 12px;
+              object-fit: contain;
+              image-rendering: high-quality;
+            "
+            referrerpolicy="no-referrer"
+          />
+        </a>
+      </div>
+
+      <!-- Navigation links -->
+      <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+        <a href="chat.html">Chat</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="attack.html">Attack</a>
+        <a href="flow.html">Flow</a>
+        <a href="encryption.html">Encryption</a>
+        <a href="crypto.html" class="active">Crypto</a>
+        <!-- Active page -->
+      </div>
+
+      <!-- Actions (dark mode + mobile menu) -->
+      <div class="nav-actions" style="display: flex; align-items: center">
+        <!-- Dark mode toggle -->
+        <button
+          id="darkToggle"
+          style="
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: transform 0.2s;
+          "
+          title="Toggle Dark Mode"
+        >
+          🌙
+        </button>
+
+        <!-- Hamburger menu for smaller screens -->
+        <div class="hamburger" id="hamburger">☰</div>
+      </div>
+    </nav>
+
+    <!-- Backend connection status indicator -->
+    <div id="connectionStatus" class="connection-bar">
+      <span id="statusDot"></span>
+      <span id="statusText">Connecting...</span>
+    </div>
+
+    <!-- Main content -->
+    <main class="container">
+      <!-- Page header -->
+      <div
+        class="card"
+        style="
+          margin-bottom: 2rem;
+          border: none;
+          background: transparent;
+          box-shadow: none;
+          padding: 0;
+        "
+      >
+        <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem">
+          Cryptography Deep Dive
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 1rem">
+          Interactive HMAC-SHA256 explorer · Algorithm analysis · Lightweight
+          crypto context
+        </p>
+      </div>
+
+      <div class="grid">
+        <!-- Left section: Interactive cryptography tools -->
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            grid-column: span 2;
+          "
+        >
+          <div class="card">
+            <!-- Section title -->
+            <h2
+              style="
+                font-size: 1.125rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                color: var(--accent);
+                border-left: 3px solid var(--accent);
+                padding-left: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+              "
+            >
+              Interactive HMAC-SHA256 Explorer
+            </h2>
+
+            <!-- Visual pipeline showing HMAC process -->
+            <div class="crypto-pipeline">
+              <div class="pipeline-box" id="p-key">
+                <label>PSK (key)</label>
+                <span class="val" id="v-psk">MySecretKe...</span>
+              </div>
+
+              <div class="pipeline-arrow">+</div>
+
+              <div class="pipeline-box" id="p-msg">
+                <label>Message</label>
+                <span class="val" id="v-msg">a3f8c2d1...:SENSOR...</span>
+              </div>
+
+              <div class="pipeline-arrow">→</div>
+
+              <div class="pipeline-box active" id="p-func">
+                <label>Function</label>
+                <span class="val" style="color: var(--warning)"
+                  >HMAC-SHA256</span
+                >
+              </div>
+
+              <div class="pipeline-arrow">→</div>
+
+              <div class="pipeline-box" id="p-out">
+                <label>Output</label>
+                <span class="val" id="v-out">73489c4a...</span>
+              </div>
+            </div>
+
+            <!-- Input: Pre-shared key -->
+            <div class="form-group" style="margin-bottom: 1.5rem">
+              <label>Pre-Shared Key (PSK)</label>
+              <input
+                type="text"
+                id="cryptoPsk"
+                value="MySecretKey12345!"
+                placeholder="Secret passphrase"
+              />
+            </div>
+
+            <!-- Nonce input and generator -->
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr auto;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+                align-items: flex-end;
+              "
+            >
+              <div class="form-group" style="margin-bottom: 0">
+                <label>Nonce (Hex)</label>
+                <input
+                  type="text"
+                  id="cryptoNonce"
+                  placeholder="64-bit Random value"
+                />
+              </div>
+
+              <!-- Button to generate random nonce -->
+              <button
+                id="genNonceBtn"
+                class="btn btn-outline"
+                style="height: 48px; width: 48px; padding: 0"
+                title="Generate New Nonce"
+              >
+                🔄
+              </button>
+            </div>
+
+            <!-- Device ID and timestamp inputs -->
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+              "
+            >
+              <div class="form-group">
+                <label>Device ID</label>
+                <select
+                  id="cryptoDeviceId"
+                  style="
+                    width: 100%;
+                    height: 48px;
+                    background: var(--bg-elevated);
+                    border: 1px solid var(--border);
+                    border-radius: 8px;
+                    color: var(--text-main);
+                    padding: 0 1rem;
+                  "
+                >
+                  <option value="SENSOR_001">SENSOR_001</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Timestamp</label>
+                <!-- Auto-filled timestamp -->
+                <input type="text" id="cryptoTimestamp" readonly />
+              </div>
+            </div>
+
+            <!-- Output section for generated HMAC -->
+            <div class="form-group">
+              <label>HMAC-SHA256 Output (256-bit / 64 Hex Chars)</label>
+              <div style="position: relative">
+                <div
+                  id="hmacResultBox"
+                  style="
+                    background: rgba(34, 197, 94, 0.05);
+                    border: 2px solid var(--success);
+                    border-radius: 8px;
+                    padding: 1rem 3.5rem 1rem 1rem;
+                    font-family: var(--font-mono);
+                    font-size: 0.8125rem;
+                    color: var(--success);
+                    word-break: break-all;
+                    min-height: 3.5rem;
+                  "
+                ></div>
+
+                <!-- Copy output button -->
+                <button
+                  id="copyHmacBtn"
+                  class="btn btn-primary"
+                  style="
+                    position: absolute;
+                    right: 8px;
+                    top: 8px;
+                    padding: 6px 10px;
+                    font-size: 0.75rem;
+                  "
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
+
+            <!-- Message composition format -->
+            <p
+              style="
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                font-family: var(--font-mono);
+                margin-top: 0.5rem;
+              "
+            >
+              Message composition:
+              <span style="color: var(--warning)"
+                >{nonce}:{device_id}:{timestamp}</span
+              >
+            </p>
+
+            <!-- Avalanche effect demonstration -->
+            <div
+              style="
+                margin-top: 3rem;
+                border-top: 1px solid var(--border);
+                padding-top: 2rem;
+              "
+            >
+              <h3
+                style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem"
+              >
+                Avalanche Effect Demo
+              </h3>
+
+              <p
+                style="
+                  font-size: 0.875rem;
+                  color: var(--text-secondary);
+                  margin-bottom: 1rem;
+                "
+              >
+                Demonstrates how small input changes affect output bits
+              </p>
+
+              <!-- Bit visualization grid -->
+              <div id="bitGrid" class="bit-grid"></div>
+
+              <!-- Bit info -->
+              <p
+                style="
+                  font-size: 0.75rem;
+                  color: var(--text-muted);
+                  margin-bottom: 0.5rem;
+                  font-family: var(--font-mono);
+                "
+              >
+                First 128 bits of HMAC output
+              </p>
+
+              <!-- Avalanche statistics -->
+              <div
+                id="avalanche-stat"
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 0.875rem;
+                  color: var(--accent);
+                  font-weight: 700;
+                "
+              >
+                1-char input change → 0/128 bits flipped = 0%
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right section: Informational cards -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem">
+          <!-- Comparison table -->
+          <div class="card">
+            <h2
+              style="
+                font-size: 1.125rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                color: var(--accent);
+                border-left: 3px solid var(--accent);
+                padding-left: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+              "
+            >
+              Lightweight vs Heavy Cryptography
+            </h2>
+
+            <!-- Comparison of cryptographic approaches -->
+            <table class="crypto-table">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>RSA-2048 / TLS</th>
+                  <th>HMAC-SHA256</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>Key generation time</td>
+                  <td class="val-red">50-200 ms</td>
+                  <td class="val-green">N/A</td>
+                </tr>
+                <tr>
+                  <td>Memory usage</td>
+                  <td class="val-red">~5 KB</td>
+                  <td class="val-green">&lt;300 bytes</td>
+                </tr>
+                <tr>
+                  <td>Code size</td>
+                  <td class="val-red">~10 KB</td>
+                  <td class="val-green">&lt;1 KB</td>
+                </tr>
+                <tr>
+                  <td>Authentication latency</td>
+                  <td class="val-red">~500 ms</td>
+                  <td class="val-green">&lt;5 ms</td>
+                </tr>
+                <tr>
+                  <td>Microcontroller support</td>
+                  <td class="val-red">Limited</td>
+                  <td class="val-green">Supported</td>
+                </tr>
+                <tr>
+                  <td>Energy consumption</td>
+                  <td class="val-red">High</td>
+                  <td class="val-green">Low</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ASCON info -->
+          <div class="card">
+            <h2
+              style="
+                font-size: 1.125rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                color: var(--accent);
+                border-left: 3px solid var(--accent);
+                padding-left: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+              "
+            >
+              ASCON (Lightweight Crypto)
+            </h2>
+
+            <!-- Key points -->
+            <ul
+              style="
+                list-style: none;
+                padding: 0;
+                font-size: 0.875rem;
+                color: var(--text-secondary);
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+              "
+            >
+              <li>• Lightweight cryptography standard</li>
+              <li>• Provides authenticated encryption</li>
+              <li>• Designed for embedded systems</li>
+              <li>• Low memory and computation requirements</li>
+              <li>• Suitable for IoT devices</li>
+            </ul>
+
+            <!-- Highlight note -->
+            <div class="ascon-banner">
+              <strong
+                style="
+                  color: var(--accent);
+                  display: block;
+                  margin-bottom: 0.25rem;
+                "
+                >Usage context:</strong
+              >
+              Used when both encryption and authentication are required in
+              constrained environments
+            </div>
+          </div>
+
+          <!-- Algorithm explanation -->
+          <div class="card">
+            <h2
+              style="
+                font-size: 1.125rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                color: var(--accent);
+                border-left: 3px solid var(--accent);
+                padding-left: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+              "
+            >
+              HMAC-SHA256 Algorithm
+            </h2>
+
+            <!-- Input description -->
+            <div
+              style="
+                font-family: var(--font-mono);
+                font-size: 0.75rem;
+                color: var(--warning);
+                margin-bottom: 1rem;
+              "
+            >
+              Input: Key (K), Message (M)
+            </div>
+
+            <!-- Algorithm steps -->
+            <div class="algo-list">
+              <div class="algo-step">Normalize key length</div>
+              <div class="algo-step">Pad key to block size</div>
+              <div class="algo-step">Compute inner hash</div>
+              <div class="algo-step">Compute outer hash</div>
+            </div>
+
+            <!-- Output description -->
+            <div
+              style="
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+                border-top: 1px solid var(--border);
+              "
+            >
+              <div
+                style="
+                  color: var(--success);
+                  font-weight: 700;
+                  font-family: var(--font-mono);
+                  font-size: 0.8125rem;
+                "
+              >
+                Output: 256-bit digest
+              </div>
+
+              <div
+                style="
+                  color: var(--text-muted);
+                  font-size: 0.75rem;
+                  margin-top: 0.25rem;
+                "
+              >
+                Provides integrity and authenticity
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Main script handling logic -->
+    <script src="script.js"></script>
+  </body>
+</html>
