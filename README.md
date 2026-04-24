@@ -291,7 +291,7 @@ Connection status on the UI is expected to change to **"Connected"** in just a f
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ### Device Registration & Master Selection
 ![Device Registration](./Screenshots/device-registration.png)
